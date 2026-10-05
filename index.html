@@ -1,1 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b12">
+<title>ClipForge — AI Short-Form Video Editor</title>
 
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --bg:#080b12;
+  --panel:#101621;
+  --panel2:#151d2b;
+  --text:#f5f7fb;
+  --muted:#9ca7b8;
+  --line:#263043;
+  --accent:#7c5cff;
+  --accent2:#a78bfa;
+  --green:#42d392;
+}
+
+body{
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(124,92,255,.18),transparent 35%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+.container{
+  width:min(1120px,92%);
+  margin:auto;
+}
+
+/* NAVBAR */
+
+nav{
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:-.5px;
+}
+
+.logo-mark{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#4f46e5);
+  display:grid;
+  place-items:center;
+  box-shadow:0 8px 30px rgba(124,92,255,.25);
+}
+
+.logo-mark span{
+  font-size:18px;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:26px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.nav-links a:hover{
+  color:white;
+}
+
+.nav-buttons{
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:11px 17px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.btn-secondary{
+  background:transparent;
+  color:white;
+  border:1px solid var(--line);
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),#6246ea);
+  color:white;
+  box-shadow:0 8px 30px rgba(124,92,255,.25);
+}
+
+.btn-primary:hover{
+  transform:translateY(-1px);
+}
+
+/* HERO */
+
+.hero{
+  text-align:center;
+  padding:105px 0 80px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(124,92,255,.3);
+  background:rgba(124,92,255,.08);
+  color:#c4b5fd;
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:24px;
+}
+
+.badge-dot{
+  width:7px;
+  height:7px;
+  background:var(--green);
+  border-radius:50%;
+  box-shadow:0 0 10px var(--green);
+}
+
+h1{
+  font-size:clamp(42px,7vw,76px);
+  line-height:1;
+  letter-spacing:-3px;
+  max-width:900px;
+  margin:auto;
+}
+
+.gradient{
+  background:linear-gradient(90deg,#fff,#b9a9ff 45%,#7c5cff);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  color:var(--muted);
+  max-width:650px;
+  margin:25px auto 30px;
+  font-size:18px;
+  line-height:1.7;
+}
+
+.hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.hero-buttons .btn{
+  padding:14px 22px;
+}
+
+/* DEMO CARD */
+
+.demo{
+  margin:20px auto 100px;
+  max-width:950px;
+}
+
+.demo-card{
+  background:linear-gradient(145deg,#111827,#0c111b);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:12px;
+  box-shadow:0 30px 80px rgba(0,0,0,.4);
+}
+
+.demo-screen{
+  min-height:390px;
+  border-radius:13px;
+  background:
+    radial-gradient(circle at 70% 30%,rgba(124,92,255,.18),transparent 25%),
+    #080d16;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.play{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:rgba(124,92,255,.9);
+  font-size:27px;
+  padding-left:4px;
+  box-shadow:0 15px 50px rgba(124,92,255,.35);
+}
+
+.timeline{
+  position:absolute;
+  left:5%;
+  right:5%;
+  bottom:25px;
+}
+
+.timeline-line{
+  height:5px;
+  border-radius:10px;
+  background:#30394b;
+  position:relative;
+}
+
+.timeline-line:after{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  height:100%;
+  width:58%;
+  border-radius:10px;
+  background:var(--accent);
+}
+
+.timeline-label{
+  display:flex;
+  justify-content:space-between;
+  color:#697487;
+  font-size:11px;
+  margin-top:9px;
+}
+
+/* FEATURES */
+
+.section{
+  padding:85px 0;
+}
+
+.section-title{
+  text-align:center;
+  max-width:700px;
+  margin:auto;
+}
+
+.section-title h2{
+  font-size:40px;
+  letter-spacing:-1.5px;
+}
+
+.section-title p{
+  color:var(--muted);
+  margin-top:14px;
+  line-height:1.7;
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+  margin-top:45px;
+}
+
+.card{
+  background:rgba(16,22,33,.8);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:25px;
+}
+
+.icon{
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:rgba(124,92,255,.12);
+  margin-bottom:20px;
+  font-size:20px;
+}
+
+.card h3{
+  margin-bottom:10px;
+  font-size:18px;
+}
+
+.card p{
+  color:var(--muted);
+  line-height:1.65;
+  font-size:14px;
+}
+
+/* WORKFLOW */
+
+.workflow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-top:45px;
+}
+
+.step{
+  position:relative;
+  padding:23px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:15px;
+}
+
+.number{
+  color:#a78bfa;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:17px;
+}
+
+.step h3{
+  font-size:16px;
+  margin-bottom:8px;
+}
+
+.step p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* CTA */
+
+.cta{
+  margin:80px auto;
+  max-width:900px;
+  padding:60px 25px;
+  text-align:center;
+  border:1px solid rgba(124,92,255,.3);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at center,rgba(124,92,255,.13),transparent 60%),
+    var(--panel);
+}
+
+.cta h2{
+  font-size:40px;
+  letter-spacing:-1.5px;
+}
+
+.cta p{
+  color:var(--muted);
+  margin:15px auto 25px;
+  max-width:560px;
+  line-height:1.6;
+}
+
+/* FOOTER */
+
+footer{
+  border-top:1px solid var(--line);
+  padding:30px 0;
+  color:#697487;
+  font-size:13px;
+}
+
+.footer-inner{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+  .nav-links{
+    display:none;
+  }
+
+  .hero{
+    padding:75px 0 55px;
+  }
+
+  h1{
+    letter-spacing:-2px;
+  }
+
+  .hero p{
+    font-size:16px;
+  }
+
+  .demo-screen{
+    min-height:280px;
+  }
+
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .workflow{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .section-title h2,
+  .cta h2{
+    font-size:32px;
+  }
+}
+
+@media(max-width:500px){
+
+  nav{
+    height:64px;
+  }
+
+  .nav-buttons .btn-secondary{
+    display:none;
+  }
+
+  .hero{
+    padding-top:60px;
+  }
+
+  h1{
+    font-size:43px;
+  }
+
+  .hero-buttons{
+    flex-direction:column;
+  }
+
+  .hero-buttons .btn{
+    width:100%;
+  }
+
+  .workflow{
+    grid-template-columns:1fr;
+  }
+
+  .demo{
+    margin-bottom:40px;
+  }
+
+  .demo-screen{
+    min-height:230px;
+  }
+
+  .footer-inner{
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-mark"><span>⚒</span></div>
+    ClipForge
+  </a>
+
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" onclick="alert('Login will be added in the next version.')">
+      Log in
+    </button>
+
+    <button class="btn btn-primary" onclick="startBuilding()">
+      Get started
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    AI-powered short-form editing
+  </div>
+
+  <h1>
+    Turn long videos into
+    <span class="gradient">great Shorts.</span>
+  </h1>
+
+  <p>
+    Upload your video, tell ClipForge how you want it edited,
+    and let AI find the moments worth watching.
+  </p>
+
+  <div class="hero-buttons">
+    <button class="btn btn-primary" onclick="startBuilding()">
+      Start creating →
+    </button>
+
+    <button class="btn btn-secondary" onclick="scrollToFeatures()">
+      See how it works
+    </button>
+  </div>
+
+</section>
+
+<section class="demo">
+
+  <div class="demo-card">
+
+    <div class="demo-screen">
+
+      <div class="play">▶</div>
+
+      <div class="timeline">
+
+        <div class="timeline-line"></div>
+
+        <div class="timeline-label">
+          <span>00:00</span>
+          <span>AI finding the best moment...</span>
+          <span>42:18</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section" id="features">
+
+  <div class="section-title">
+    <h2>Built around your editing style.</h2>
+
+    <p>
+      ClipForge isn't supposed to randomly throw effects onto your video.
+      You tell it what you want, and the editing system follows those rules.
+    </p>
+  </div>
+
+  <div class="features">
+
+    <div class="card">
+      <div class="icon">✦</div>
+      <h3>Find the best moments</h3>
+      <p>
+        ClipForge analyzes your video and looks for strong hooks,
+        reactions, stories, jokes, useful information and moments
+        worth turning into Shorts.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="icon">Aa</div>
+      <h3>Automatic captions</h3>
+      <p>
+        Generate short-form captions designed around the style
+        you choose instead of using one fixed caption style.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="icon">⌁</div>
+      <h3>Smart editing</h3>
+      <p>
+        The editing plan can control pacing, cuts, zooms,
+        reframing, music and other short-form elements.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section" id="how">
+
+  <div class="section-title">
+    <h2>From video to Short.</h2>
+
+    <p>
+      A simple workflow for creators who don't want to manually
+      search through hours of footage.
+    </p>
+  </div>
+
+  <div class="workflow">
+
+    <div class="step">
+      <div class="number">01</div>
+      <h3>Upload</h3>
+      <p>
+        Add your long-form video from your device.
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="number">02</div>
+      <h3>Set your style</h3>
+      <p>
+        Choose your desired length, pacing, captions,
+        effects and content style.
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="number">03</div>
+      <h3>AI edits</h3>
+      <p>
+        ClipForge analyzes the footage and creates an
+        editing plan based on your rules.
+      </p>
+    </div>
+
+    <div class="step">
+      <div class="number">04</div>
+      <h3>Review & export</h3>
+      <p>
+        Preview the result and export the finished Short.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="cta">
+
+  <h2>Ready to forge your first clip?</h2>
+
+  <p>
+    ClipForge is being built for creators who want better Shorts
+    without spending hours searching through long videos.
+  </p>
+
+  <button class="btn btn-primary" onclick="startBuilding()">
+    Start creating →
+  </button>
+
+</section>
+
+<footer>
+
+  <div class="footer-inner">
+    <span>© 2026 ClipForge</span>
+    <span>AI-assisted video editing</span>
+  </div>
+
+</footer>
+
+</div>
+
+<script>
+
+function startBuilding(){
+  alert(
+    "ClipForge is currently being built. The upload dashboard is coming next."
+  );
+}
+
+function scrollToFeatures(){
+  document.getElementById("features").scrollIntoView({
+    behavior:"smooth"
+  });
+}
+
+</script>
+
+</body>
+</html>
